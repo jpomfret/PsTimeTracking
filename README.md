@@ -1,0 +1,12 @@
+# PsTimeTracking
+
+PowerShell module to make tracking time easier.
+
+## Make it yours
+
+---
+Generated with Plaster and the SampleModule template
+
+This is a sample Readme
+
+## Make it yours
