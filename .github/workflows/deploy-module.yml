@@ -57,7 +57,7 @@ jobs:
         path: ${{ env.buildFolderName }}
     - name: Run Tests
       shell: pwsh
-      run: ./build.ps1 -tasks noop; ./build.ps1 -tasks test
+      run: ./build.ps1 -tasks noop; ./build.ps1 -tasks test -CodeCoverage 0
     - name: Publish Test Artifact
       uses: actions/upload-artifact@v3
       with:
@@ -82,7 +82,7 @@ jobs:
         path: ${{ env.buildFolderName }}
     - name: Run Tests
       shell: pwsh
-      run: ./build.ps1 -tasks noop; ./build.ps1 -tasks test
+      run: ./build.ps1 -tasks noop; ./build.ps1 -tasks test -CodeCoverage 0
 
     - name: Publish Test Artifact
       uses: actions/upload-artifact@v3
@@ -108,7 +108,7 @@ jobs:
         path: ${{ env.buildFolderName }}
     - name: Run Tests
       shell: pwsh
-      run: ./build.ps1 -ResolveDependency -tasks test
+      run: ./build.ps1 -ResolveDependency -tasks test -CodeCoverage 0
     - name: Publish Test Artifact
       uses: actions/upload-artifact@v3
       with:
