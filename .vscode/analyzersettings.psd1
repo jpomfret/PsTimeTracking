@@ -15,7 +15,7 @@
         'PSAvoidUsingPositionalParameters',
         'PSAvoidShouldContinueWithoutForce',
         'PSAvoidUsingWMICmdlet',
-        'PSAvoidUsingWriteHost',
+        # 'PSAvoidUsingWriteHost', ## disabled since using pansies
         'PSDSCReturnCorrectTypesForDSCFunctions',
         'PSDSCStandardDSCFunctionsInResource',
         'PSDSCUseIdenticalMandatoryParametersForDSC',

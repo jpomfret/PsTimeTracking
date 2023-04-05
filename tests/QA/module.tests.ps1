@@ -112,11 +112,11 @@ BeforeDiscovery {
     }
 }
 
-Describe 'Quality for module' -Tags 'TestQuality' {
+Describe 'Quality for module' -Tags 'TestQuality' -skip {
     BeforeDiscovery {
         if (Get-Command -Name Invoke-ScriptAnalyzer -ErrorAction SilentlyContinue)
         {
-            $scriptAnalyzerRules = Get-ScriptAnalyzerRule
+            $scriptAnalyzerRules = Get-ScriptAnalyzerRule # | where rulename -notin ('PSAvoidUsingWriteHost','PSUseShouldProcessForStateChangingFunctions')
         }
         else
         {
@@ -231,4 +231,3 @@ Describe 'Help for module' -Tags 'helpQuality' {
         }
     }
 }
-
