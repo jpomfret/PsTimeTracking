@@ -23,7 +23,7 @@ function Get-PstConfig {
         # Linux/macOS
         $folder = Join-Path $HOME '.local/share/PstTimeTracker'
     }
-    
+
     $configFile = Join-Path $folder 'config.json'
 
     Write-Debug "Config file location: $configFile"
