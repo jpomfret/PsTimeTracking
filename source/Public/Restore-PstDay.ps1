@@ -30,6 +30,8 @@ function Restore-PstDay {
 
     $fileName = Join-Path $folder ('todayswork-{0}.json' -f (Get-Date($date) -Format 'yyyy-MM-dd'))
 
+    Write-Verbose "Restoring day from file: $fileName"
+
     if (Test-Path $fileName) {
 
         Get-Content $fileName | ConvertFrom-Json | Select-Object Client, Project, StartTime, @{l='Elapsed';e={New-TimeSpan -Seconds $_.ElapsedTotalSeconds}}

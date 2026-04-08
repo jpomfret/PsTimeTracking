@@ -1,31 +1,27 @@
 <#
 .SYNOPSIS
-Adds a chunk of time to the day so far.
+Updates a project name for a client.
 
 .DESCRIPTION
-Adds a chunk of time to the day so far.
+Renames an existing project for the specified client.
 
 .PARAMETER Client
-The client to add time to. Must be a client configured in the system.
+The name of the client whose project to update.
 
 .PARAMETER Project
-The project to add time to. Must be a project associated with the client.
+The current name of the project.
 
-.PARAMETER Minutes
-The number of minutes to add.
-
-.PARAMETER StartTime
-If provided this will be added to the day summary.
+.PARAMETER NewName
+The new name for the project.
 
 .EXAMPLE
-PS> Add-PstTime -Client ClientA -Project 'Project Alpha' -Minutes 60
+PS> Update-PstProject -Client 'ClientA' -Project 'Project Alpha' -NewName 'Alpha Project v2'
 
-Adds 60 mins to the day so far for ClientA - Project Alpha.
-
+Renames the project from 'Project Alpha' to 'Alpha Project v2' for ClientA.
 #>
-
-function Add-PstTime {
-    param (
+function Update-PstProject {
+    [CmdletBinding()]
+    param(
         [Parameter(Mandatory)]
         [ArgumentCompleter({
             param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
@@ -55,39 +51,51 @@ function Add-PstTime {
         [string]$Project,
 
         [Parameter(Mandatory)]
-        [int]$Minutes,
-
-        [Parameter()]
-        [datetime]$StartTime
+        [string]$NewName
     )
 
-    # Validate client exists
     $config = Get-PstConfig
+
     $clientObj = $config.Clients | Where-Object { $_.Name -eq $Client }
     if (!$clientObj) {
-        Write-Warning "Client '$Client' not found in configuration. Use Get-PstClient to see available clients."
+        Write-Warning "Client '$Client' not found."
         return
     }
 
-    # Validate project exists for this client
     if ($clientObj.Projects -notcontains $Project) {
-        Write-Warning "Project '$Project' not found for client '$Client'. Use Get-PstProject -Client '$Client' to see available projects."
+        Write-Warning "Project '$Project' not found for client '$Client'."
         return
     }
-    Clear-Host
 
-    Write-host ('Adding {0} minutes for {1} - {2}' -f $Minutes, $Client, $Project)
+    # Check if new name already exists
+    if ($clientObj.Projects -contains $NewName) {
+        Write-Warning "A project with name '$NewName' already exists for client '$Client'."
+        return
+    }
 
-    [Array]$TodaysWork = Restore-Pstday
+    # Create updated project list
+    $updatedProjects = $clientObj.Projects | ForEach-Object {
+        if ($_ -eq $Project) { $NewName } else { $_ }
+    }
 
-    $Addtime = $Client | Select-Object  @{l='Client';e={$Client}},@{l='Project';e={$Project}},@{l='StartTime';e={$StartTime}}, @{l='Elapsed';e={New-TimeSpan -Minutes $Minutes}}
-    $Addtime | Format-Table -AutoSize | Out-String | Write-Host  -ForegroundColor White
-    $TodaysWork += $AddTime
+    # Recreate the client list with updated projects
+    $updatedClients = foreach ($client in $config.Clients) {
+        if ($client.Name -eq $Client) {
+            [PSCustomObject]@{
+                Name = $client.Name
+                Projects = $updatedProjects
+            }
+        } else {
+            $client
+        }
+    }
 
-    # backup the day so far just in case
-    Backup-PstDay -TodaysWork $TodaysWork
+    # Recreate config object
+    $newConfig = [PSCustomObject]@{
+        Clients = $updatedClients
+    }
 
-    # Output day summary
-    Get-PstDaySummary
+    Save-PstConfig -Config $newConfig
 
+    Write-Host "Project renamed from '$Project' to '$NewName' for client '$Client' successfully." -ForegroundColor Green
 }

@@ -3,26 +3,64 @@
 Starts a timer for a client and project.
 
 .DESCRIPTION
-Starts a timer for a client and project.
+Starts a timer for a client and project. The client and project must be configured in the system.
 
 .PARAMETER Client
-Client to track time against.
+Client to track time against. Must be a client configured in the system.
 
 .PARAMETER Project
-Project to track time against.
+Project to track time against. Must be a project associated with the client.
 
 .EXAMPLE
-PS> Start-PstTimer -Client ClientA -Project BigProject
+PS> Start-PstTimer -Client ClientA -Project 'Project Alpha'
 
-This will start a timer for ClientA - BigProject.
+This will start a timer for ClientA - Project Alpha.
 
 #>
 function Start-PstTimer {
     param (
-        $Client,
+        [Parameter(Mandatory)]
+        [ArgumentCompleter({
+            param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+            $configFile = Join-Path $env:localappdata 'PstTimeTracker\config.json'
+            if (Test-Path $configFile) {
+                $config = Get-Content $configFile -Raw | ConvertFrom-Json
+                $config.Clients.Name | Where-Object { $_ -like "$wordToComplete*" }
+            }
+        })]
+        [string]$Client,
 
-        $Project
+        [Parameter(Mandatory)]
+        [ArgumentCompleter({
+            param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+            $clientName = $fakeBoundParameters['Client']
+            if ($clientName) {
+                $configFile = Join-Path $env:localappdata 'PstTimeTracker\config.json'
+                if (Test-Path $configFile) {
+                    $config = Get-Content $configFile -Raw | ConvertFrom-Json
+                    $client = $config.Clients | Where-Object { $_.Name -eq $clientName }
+                    if ($client) {
+                        $client.Projects | Where-Object { $_ -like "$wordToComplete*" }
+                    }
+                }
+            }
+        })]
+        [string]$Project
     )
+
+    # Validate client exists
+    $config = Get-PstConfig
+    $clientObj = $config.Clients | Where-Object { $_.Name -eq $Client }
+    if (!$clientObj) {
+        Write-Warning "Client '$Client' not found in configuration. Use Get-PstClient to see available clients."
+        return
+    }
+
+    # Validate project exists for this client
+    if ($clientObj.Projects -notcontains $Project) {
+        Write-Warning "Project '$Project' not found for client '$Client'. Use Get-PstProject -Client '$Client' to see available projects."
+        return
+    }
     Clear-Host
 
     $startTime = (Get-Date)

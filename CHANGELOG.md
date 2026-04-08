@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- For new features.
+- Added tab completion (ArgumentCompleter) for Client and Project parameters across all relevant functions
+- Added debug message to Get-PstConfig to show configuration file location
 
 ### Changed
 

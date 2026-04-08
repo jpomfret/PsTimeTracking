@@ -25,9 +25,13 @@ function Get-PstDaySummary {
     param (
         $date
     )
-
     if($date) {
         $RestoredWork = Restore-PstDay -date $date
+
+        if (-not $RestoredWork) {
+            Write-Host ('No work found for {0}...' -f $date) -ForegroundColor DarkRed -BackgroundColor White
+            return
+        }
 
         [Array]$results = $RestoredWork | Group-Object Client, Project | Select-Object Name, @{l='Total';e={New-TimeSpan -Seconds (($_.Group.Elapsed.TotalSeconds | Measure-Object -sum ).sum)}}
         $results += [PSCustomObject]@{

@@ -1,0 +1,38 @@
+{
+  "_comment": "This is an EXAMPLE configuration file for PsTimeTracking.",
+  "_instructions": "The actual config is created automatically at $env:LocalAppData\\PstTimeTracker\\config.json",
+  "_usage": "Edit the auto-created file directly, or use the Add-PstClient, Add-PstProject, etc. functions",
+  "Clients": [
+    {
+      "Name": "ClientA",
+      "Projects": [
+        "Project Alpha",
+        "Project Beta",
+        "Support"
+      ]
+    },
+    {
+      "Name": "ClientB",
+      "Projects": [
+        "Website Redesign",
+        "Database Migration"
+      ]
+    },
+    {
+      "Name": "MMG - Data",
+      "Projects": [
+        "Data Analysis",
+        "ETL Pipeline",
+        "Reporting"
+      ]
+    },
+    {
+      "Name": "MMG - DevOps",
+      "Projects": [
+        "CI/CD Setup",
+        "Infrastructure",
+        "Monitoring"
+      ]
+    }
+  ]
+}
