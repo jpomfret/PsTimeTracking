@@ -7,7 +7,7 @@ Describe "Remove-PstClient Unit Tests" -Tag 'UnitTests' {
             [object[]]$specificParameters = 'Name','Force'
             $allCommonParameters = [System.Management.Automation.PSCmdlet]::CommonParameters + [System.Management.Automation.PSCmdlet]::OptionalCommonParameters
             $allCommonParameters += 'WhatIf', 'Confirm' # ShouldProcess adds these
-            
+
             # Filter out common parameters to check only specific ones
             $actualSpecificParams = $params | Where-Object { $_ -notin $allCommonParameters }
             (@(Compare-Object -ReferenceObject $specificParameters -DifferenceObject $actualSpecificParams).Count ) | Should -Be 0
