@@ -19,7 +19,11 @@ function Get-PstProject {
         [Parameter(Mandatory)]
         [ArgumentCompleter({
             param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-            $configFile = Join-Path $env:localappdata 'PstTimeTracker\config.json'
+            if ($IsWindows -or $PSVersionTable.PSVersion.Major -le 5) {
+                $configFile = Join-Path $env:LOCALAPPDATA 'PstTimeTracker\config.json'
+            } else {
+                $configFile = Join-Path $HOME '.local/share/PstTimeTracker/config.json'
+            }
             if (Test-Path $configFile) {
                 $config = Get-Content $configFile -Raw | ConvertFrom-Json
                 $config.Clients.Name | Where-Object { $_ -like "$wordToComplete*" }

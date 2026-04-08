@@ -26,7 +26,11 @@ function Restore-PstDay {
         $date = (Get-Date).Date
     )
 
-    $folder = Join-Path $env:localappdata 'PstTimeTracker'
+    if ($IsWindows -or $PSVersionTable.PSVersion.Major -le 5) {
+        $folder = Join-Path $env:LOCALAPPDATA 'PstTimeTracker'
+    } else {
+        $folder = Join-Path $HOME '.local/share/PstTimeTracker'
+    }
 
     $fileName = Join-Path $folder ('todayswork-{0}.json' -f (Get-Date($date) -Format 'yyyy-MM-dd'))
 

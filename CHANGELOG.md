@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- For changes in existing functionality.
+- Updated GitHub Actions workflow to use actions/upload-artifact@v4 and actions/download-artifact@v4 (from deprecated v3)
 
 ### Deprecated
 
@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- For any bug fix.
+- Fixed cross-platform compatibility for config file paths (Windows uses LOCALAPPDATA, Linux/macOS uses .local/share)
 
 ### Security
 

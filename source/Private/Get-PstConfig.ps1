@@ -15,7 +15,15 @@ function Get-PstConfig {
     [CmdletBinding()]
     param()
 
-    $folder = Join-Path $env:localappdata 'PstTimeTracker'
+    # Cross-platform config folder location
+    if ($IsWindows -or $PSVersionTable.PSVersion.Major -le 5) {
+        $folder = Join-Path $env:LOCALAPPDATA 'PstTimeTracker'
+    }
+    else {
+        # Linux/macOS
+        $folder = Join-Path $HOME '.local/share/PstTimeTracker'
+    }
+    
     $configFile = Join-Path $folder 'config.json'
 
     Write-Debug "Config file location: $configFile"

@@ -21,7 +21,11 @@ function Backup-PstDay {
         [parameter(ValueFromPipeline=$true, Mandatory)]
         $TodaysWork
     )
-    $folder = Join-Path $env:localappdata 'PstTimeTracker'
+    if ($IsWindows -or $PSVersionTable.PSVersion.Major -le 5) {
+        $folder = Join-Path $env:LOCALAPPDATA 'PstTimeTracker'
+    } else {
+        $folder = Join-Path $HOME '.local/share/PstTimeTracker'
+    }
 
     if (!(Test-Path $folder)) {
         New-Item $folder -ItemType Directory | Out-Null
