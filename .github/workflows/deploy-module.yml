@@ -367,7 +367,9 @@ jobs:
         $preRelease = $manifest.PrivateData.PSData.Prerelease
         $fullVersion = if ($preRelease) { "$moduleVersion-$preRelease" } else { $moduleVersion }
         Write-Host "Module name: $moduleName, version to publish: $fullVersion"
-        $existing = Find-Module -Name $moduleName -RequiredVersion $fullVersion -Repository PSGallery -ErrorAction SilentlyContinue
+        $findParams = @{ Name = $moduleName; RequiredVersion = $fullVersion; Repository = 'PSGallery'; ErrorAction = 'SilentlyContinue' }
+        if ($preRelease) { $findParams['AllowPrerelease'] = $true }
+        $existing = Find-Module @findParams
         if ($existing) {
           Write-Host "Version $fullVersion already exists on PSGallery - skipping publish"
           "skip_publish=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
