@@ -91,7 +91,10 @@ function Remove-PstProject {
                     Projects = $updatedProjects
                 }
             } else {
-                $client
+                [PSCustomObject]@{
+                    Name = $client.Name
+                    Projects = $client.Projects
+                }
             }
         }
 

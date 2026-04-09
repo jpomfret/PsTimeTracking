@@ -69,7 +69,10 @@ function Add-PstProject {
                 Projects = $projectsList.ToArray()
             }
         } else {
-            $client
+            [PSCustomObject]@{
+                Name = $client.Name
+                Projects = $client.Projects
+            }
         }
     }
 

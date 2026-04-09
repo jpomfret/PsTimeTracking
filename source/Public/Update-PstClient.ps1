@@ -61,7 +61,10 @@ function Update-PstClient {
                 Projects = $client.Projects
             }
         } else {
-            $client
+            [PSCustomObject]@{
+                Name = $client.Name
+                Projects = $client.Projects
+            }
         }
     }
 

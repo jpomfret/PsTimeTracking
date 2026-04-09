@@ -37,4 +37,3 @@ merge-message-formats: {}
 #   increment: Patch
 #   regex: (hot)?fix(es)?[/-]
 #   source-branches: ['master']
-

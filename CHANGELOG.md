@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Updated GitHub Actions workflow to use actions/upload-artifact@v4 and actions/download-artifact@v4 (from deprecated v3)
+- Updated GitHub Actions workflow to use windows-latest runner (from deprecated windows-2019)
+- Removed hardcoded PowerShellForGitHub version from publish step
 
 ### Deprecated
 
@@ -27,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed cross-platform compatibility for config file paths (Windows uses LOCALAPPDATA, Linux/macOS uses .local/share)
+- Fixed config file corruption bug in Add-PstProject, Update-PstProject, Update-PstClient, and Remove-PstProject where objects were being converted to strings
 
 ### Security
 
