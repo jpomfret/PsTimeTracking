@@ -34,21 +34,21 @@ function Get-PstConfig {
 
     if (!(Test-Path $configFile)) {
         # Create default configuration
-        $defaultConfig = @{
+        $defaultConfig = [PSCustomObject]@{
             Clients = @(
-                @{
+                [PSCustomObject]@{
                     Name = 'ClientA'
                     Projects = @('Project Alpha', 'Project Beta', 'Support')
-                },
-                @{
+                }
+                [PSCustomObject]@{
                     Name = 'ClientB'
                     Projects = @('Website Redesign', 'Database Migration')
-                },
-                @{
+                }
+                [PSCustomObject]@{
                     Name = 'MMG - Data'
                     Projects = @('Data Analysis', 'ETL Pipeline', 'Reporting')
-                },
-                @{
+                }
+                [PSCustomObject]@{
                     Name = 'MMG - DevOps'
                     Projects = @('CI/CD Setup', 'Infrastructure', 'Monitoring')
                 }

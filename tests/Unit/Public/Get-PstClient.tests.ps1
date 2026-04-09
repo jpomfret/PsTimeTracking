@@ -1,5 +1,17 @@
 
 Describe "Get-PstClient Unit Tests" -Tag 'UnitTests' {
+    BeforeAll {
+        # Ensure we have a clean config for testing
+        if ($IsWindows -or $PSVersionTable.PSVersion.Major -le 5) {
+            $configFile = Join-Path $env:LOCALAPPDATA 'PstTimeTracker\config.json'
+        } else {
+            $configFile = Join-Path $HOME '.local/share/PstTimeTracker/config.json'
+        }
+        if (Test-Path $configFile) {
+            Remove-Item $configFile -Force
+        }
+    }
+
     Context "Validate parameters" {
         It "Should only contain our specific parameters" {
             $command = 'Get-PstClient'
