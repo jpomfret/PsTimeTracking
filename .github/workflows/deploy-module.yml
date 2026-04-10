@@ -353,13 +353,39 @@ jobs:
       with:
         name: ${{ env.buildArtifactName }}
         path: ${{ env.buildFolderName }}
+    - name: Check if version already published
+      id: version_check
+      shell: pwsh
+      run: |
+        $manifestPath = Get-ChildItem -Path ./output/module -Filter "*.psd1" -Recurse | Select-Object -First 1
+        if (-not $manifestPath) {
+          throw "No module manifest (.psd1) found under ./output/module. Ensure the build artifact was downloaded correctly."
+        }
+        $moduleName = [System.IO.Path]::GetFileNameWithoutExtension($manifestPath.Name)
+        $manifest = Import-PowerShellDataFile -Path $manifestPath.FullName
+        $moduleVersion = $manifest.ModuleVersion
+        $preRelease = $manifest.PrivateData.PSData.Prerelease
+        $fullVersion = if ($preRelease) { "$moduleVersion-$preRelease" } else { $moduleVersion }
+        Write-Host "Module name: $moduleName, version to publish: $fullVersion"
+        $findParams = @{ Name = $moduleName; RequiredVersion = $fullVersion; Repository = 'PSGallery'; ErrorAction = 'SilentlyContinue' }
+        if ($preRelease) { $findParams['AllowPrerelease'] = $true }
+        $existing = Find-Module @findParams
+        if ($existing) {
+          Write-Host "Version $fullVersion already exists on PSGallery - skipping publish"
+          "skip_publish=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+        } else {
+          Write-Host "Version $fullVersion not found on PSGallery - proceeding with publish"
+          "skip_publish=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+        }
     - name: Publish Release
+      if: steps.version_check.outputs.skip_publish != 'true'
       shell: pwsh
       run: ./build.ps1 -tasks publish
       env:
         GitHubToken: ${{ secrets.GitHubToken }}
         GalleryApiToken: ${{ secrets.GalleryApiToken }}
     - name: Send Changelog PR
+      if: steps.version_check.outputs.skip_publish != 'true'
       shell: pwsh
       run: Get-Module -Name PowerShellForGitHub -ListAvailable ;./build.ps1  -tasks Create_ChangeLog_GitHub_PR
       env:
