@@ -12,6 +12,7 @@
     Pester                      = 'latest'
     Plaster                     = 'latest'
     ModuleBuilder               = 'latest'
+    Configuration               = 'latest'
     ChangelogManagement         = 'latest'
     Sampler                     = 'latest'
     'Sampler.GitHubTasks'       = 'latest'
