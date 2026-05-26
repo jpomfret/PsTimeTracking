@@ -7,8 +7,8 @@ Gets the day summary.
 
 If a date is provided it will restore the day so far from the json file in the local appdata folder and display the summary.
 
-.PARAMETER date
-If provided this will restore the specified day from the json file in the local appdata folder and display the summary.
+.PARAMETER Date
+The date to retrieve the summary for. If not provided, displays the summary for today.
 
 .EXAMPLE
 PS> Get-PstDaySummary
@@ -16,20 +16,21 @@ PS> Get-PstDaySummary
 This will display the day summary for the day so far.
 
 .EXAMPLE
-PS> Get-PstDaySummary -date 2023-01-01
+PS> Get-PstDaySummary -Date 2023-01-01
 
 This will restore the json from the local appdata folder for 2023-01-01 and display the summary.
 
 #>
 function Get-PstDaySummary {
     param (
-        $date
+        [Parameter()]
+        [datetime]$Date
     )
-    if($date) {
-        $RestoredWork = Restore-PstDay -date $date
+    if($Date) {
+        $RestoredWork = Restore-PstDay -date $Date
 
         if (-not $RestoredWork) {
-            Write-Host ('No work found for {0}...' -f $date) -ForegroundColor DarkRed -BackgroundColor White
+            Write-Host ('No work found for {0}...' -f $Date) -ForegroundColor DarkRed -BackgroundColor White
             return
         }
 
