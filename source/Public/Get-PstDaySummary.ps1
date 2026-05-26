@@ -27,7 +27,7 @@ function Get-PstDaySummary {
         [datetime]$Date
     )
     if($Date) {
-        $RestoredWork = Restore-PstDay -date $Date
+        $RestoredWork = Restore-PstDay -Date $Date
 
         if (-not $RestoredWork) {
             Write-Host ('No work found for {0}...' -f $Date) -ForegroundColor DarkRed -BackgroundColor White
