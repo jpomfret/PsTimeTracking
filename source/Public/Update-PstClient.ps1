@@ -54,19 +54,19 @@ function Update-PstClient {
     }
 
     # Recreate the client list with updated name
-    $updatedClients = foreach ($client in $config.Clients) {
-        if ($client.Name -eq $Name) {
+    $updatedClients = @(foreach ($clientEntry in $config.Clients) {
+        if ($clientEntry.Name -eq $Name) {
             [PSCustomObject]@{
-                Name = $NewName
-                Projects = $client.Projects
+                Name     = $NewName
+                Projects = @($clientEntry.Projects)
             }
         } else {
             [PSCustomObject]@{
-                Name = $client.Name
-                Projects = $client.Projects
+                Name     = $clientEntry.Name
+                Projects = @($clientEntry.Projects)
             }
         }
-    }
+    })
 
     # Recreate config object
     $newConfig = [PSCustomObject]@{

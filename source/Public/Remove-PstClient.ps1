@@ -52,7 +52,7 @@ function Remove-PstClient {
     }
 
     if ($Force -or $PSCmdlet.ShouldProcess($Name, "Remove client")) {
-        $updatedClients = $config.Clients | Where-Object { $_.Name -ne $Name }
+        $updatedClients = @($config.Clients | Where-Object { $_.Name -ne $Name })
 
         # Recreate config object to avoid mutation issues
         $newConfig = [PSCustomObject]@{

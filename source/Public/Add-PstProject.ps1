@@ -62,19 +62,19 @@ function Add-PstProject {
     $null = $projectsList.Add($Project)
 
     # Recreate the client list with updated projects
-    $updatedClients = foreach ($client in $config.Clients) {
-        if ($client.Name -eq $Client) {
+    $updatedClients = @(foreach ($clientEntry in $config.Clients) {
+        if ($clientEntry.Name -eq $Client) {
             [PSCustomObject]@{
-                Name = $client.Name
+                Name     = $clientEntry.Name
                 Projects = $projectsList.ToArray()
             }
         } else {
             [PSCustomObject]@{
-                Name = $client.Name
-                Projects = $client.Projects
+                Name     = $clientEntry.Name
+                Projects = @($clientEntry.Projects)
             }
         }
-    }
+    })
 
     # Recreate config object
     $newConfig = [PSCustomObject]@{

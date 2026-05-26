@@ -22,4 +22,52 @@ Describe "Remove-PstClient Unit Tests" -Tag 'UnitTests' {
             (Get-Command Remove-PstClient).Parameters.ContainsKey('Confirm') | Should -Be $true
         }
     }
+
+    Context "Config structure after Remove-PstClient" {
+        BeforeEach {
+            $script:capturedConfig = $null
+
+            $testConfig = [PSCustomObject]@{
+                Clients = @(
+                    [PSCustomObject]@{
+                        Name     = 'ClientToRemove'
+                        Projects = @('Project1')
+                    }
+                    [PSCustomObject]@{
+                        Name     = 'RemainingClient'
+                        Projects = @('ProjectA', 'ProjectB')
+                    }
+                )
+            }
+
+            Mock -CommandName 'Get-PstConfig' -ModuleName 'PsTimeTracking' -MockWith { $testConfig }
+            Mock -CommandName 'Save-PstConfig' -ModuleName 'PsTimeTracking' -MockWith {
+                param($Config)
+                $script:capturedConfig = $Config
+            }
+        }
+
+        It 'Should call Save-PstConfig when removing a client' {
+            Remove-PstClient -Name 'ClientToRemove' -Force
+            Should -Invoke 'Save-PstConfig' -ModuleName 'PsTimeTracking' -Exactly 1
+        }
+
+        It 'Should save Clients as an array even when one client remains' {
+            Remove-PstClient -Name 'ClientToRemove' -Force
+            $script:capturedConfig.Clients.GetType().IsArray | Should -Be $true
+        }
+
+        It 'Should remove the named client from the saved config' {
+            Remove-PstClient -Name 'ClientToRemove' -Force
+            $script:capturedConfig.Clients | Where-Object { $_.Name -eq 'ClientToRemove' } | Should -BeNullOrEmpty
+        }
+
+        It 'Should preserve remaining clients and their projects' {
+            Remove-PstClient -Name 'ClientToRemove' -Force
+            $remaining = $script:capturedConfig.Clients | Where-Object { $_.Name -eq 'RemainingClient' }
+            $remaining | Should -Not -BeNullOrEmpty
+            $remaining.Projects | Should -Contain 'ProjectA'
+            $remaining.Projects | Should -Contain 'ProjectB'
+        }
+    }
 }
