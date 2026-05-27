@@ -37,6 +37,6 @@ function Backup-PstDay {
         $TodaysWork | Select-Object Client, Project, StartTime, @{l='ElapsedTotalSeconds';e={$_.Elapsed.TotalSeconds}} | ConvertTo-Json | Out-File $fileName
     }
 
-    # remove json files older than 10 days
-    Get-ChildItem $folder *.json | where-object lastWriteTime -lt (get-date).AddDays(-10) | Remove-Item
+    # remove daily backup files older than 10 days (config.json is excluded by the filter)
+    Get-ChildItem $folder 'todayswork-*.json' | Where-Object lastWriteTime -lt (Get-Date).AddDays(-10) | Remove-Item
 }

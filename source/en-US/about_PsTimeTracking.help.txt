@@ -2,23 +2,65 @@ TOPIC
     about_PsTimeTracking
 
 SHORT DESCRIPTION
-    PowerShell module to make tracking time easier.
+    PowerShell module to track time spent on client projects.
 
 LONG DESCRIPTION
-    {{ Add Long description here }}
+    PsTimeTracking provides a set of PowerShell functions for tracking time
+    spent working on client projects. Time is stored locally in JSON files
+    in your AppData folder and is never sent anywhere.
+
+    Configuration is managed through a config.json file that lists your
+    clients and their associated projects. The file is created automatically
+    on first use with sample clients, and can be managed with the provided
+    functions or edited directly with Open-PstConfig.
+
+    Time entries can be created interactively with Start-PstTimer (which
+    runs a stopwatch until you press a key) or added manually with
+    Add-PstTime. Use Move-PstTime to correct time tracked to the wrong
+    bucket. View your day with Get-PstDaySummary.
 
 EXAMPLES
-    PS C:\> {{ add examples here }}
+    PS C:\> Start-PstTimer -Client 'Acme' -Project 'Website'
+
+    Starts an interactive timer for the Website project under Acme.
+    Press any key to stop the timer and save the entry.
+
+    PS C:\> Add-PstTime -Client 'Acme' -Project 'Website' -Minutes 45
+
+    Manually adds 45 minutes to the Website project.
+
+    PS C:\> Get-PstDaySummary
+
+    Displays a summary of all time tracked today, grouped by client and project.
+
+    PS C:\> Get-PstDaySummary -Date '2025-12-01'
+
+    Displays a summary for a specific past date.
+
+    PS C:\> Open-PstConfig
+
+    Opens the configuration file in VS Code.
 
 NOTE:
-    Thank you to all those who contributed to this module, by writing code, sharing opinions, and provided feedback.
+    All data is stored locally in:
+      Windows:       $env:LocalAppData\PstTimeTracker\
+      Linux/macOS:   $HOME/.local/share/PstTimeTracker/
+
+    No data leaves your machine. Daily JSON files are automatically pruned
+    after 10 days.
 
 TROUBLESHOOTING NOTE:
-    Look out on the Github repository for issues and new releases.
+    Check the GitHub repository for issues and new releases.
+    Use -Verbose with Restore-PstDay to see the file path being read.
+    Use -Debug with any function calling Get-PstConfig to see the config
+    file location.
 
 SEE ALSO
-  - {{ Please add Project URI such as github }}}
+  - https://github.com/jpomfret/PsTimeTracking
+  - Get-PstClient
+  - Start-PstTimer
+  - Get-PstDaySummary
+  - Open-PstConfig
 
 KEYWORDS
-      {{ Add coma separated keywords here }}
-
+    TimeTracking, Productivity, Timer, Time, Client, Project

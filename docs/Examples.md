@@ -6,16 +6,16 @@
 # Import the module
 Import-Module PsTimeTracking
 
-# View the default clients
+# View the default clients (created automatically on first use)
 Get-PstClient
 
 # Output:
-# Name           Projects
-# ----           --------
-# ClientA        {Project Alpha, Project Beta, Support}
-# ClientB        {Website Redesign, Database Migration}
-# MMG - Data     {Data Analysis, ETL Pipeline, Reporting}
-# MMG - DevOps   {CI/CD Setup, Infrastructure, Monitoring}
+# Name     Projects
+# ----     --------
+# ClientA  {Project Alpha, Project Beta, Support}
+# ClientB  {Website Redesign, Database Migration}
+# Globex   {Data Analysis, ETL Pipeline, Reporting}
+# Initech  {CI/CD Setup, Infrastructure, Monitoring}
 
 # View projects for a specific client
 Get-PstProject -Client 'ClientA'
@@ -73,7 +73,7 @@ Get-PstDaySummary
 
 # Output:
 # --------------------------
-# So far today:             
+# So far today:
 # --------------------------
 # Name                      Total
 # ----                      -----
@@ -90,35 +90,44 @@ Get-PstDaySummary -Date '2026-04-01'
 
 ```powershell
 # Morning: Start working on first task
-Start-PstTimer -Client 'MMG - Data' -Project 'ETL Pipeline'
+Start-PstTimer -Client 'Globex' -Project 'ETL Pipeline'
 # Work... Press key when done
 
 # Mid-morning: Switch to another task
-Start-PstTimer -Client 'MMG - DevOps' -Project 'CI/CD Setup'
+Start-PstTimer -Client 'Initech' -Project 'CI/CD Setup'
 # Work... Press key when done
 
 # Add time for a meeting you forgot to track
 Add-PstTime -Client 'ClientA' -Project 'Support' -Minutes 30 -StartTime (Get-Date '11:00 AM')
 
+# Move time that was tracked to the wrong project
+Move-PstTime -FromClient 'ClientA' -FromProject 'Support' -ToClient 'Globex' -ToProject 'Reporting' -Minutes 15
+
 # Afternoon: Continue with more work
-Start-PstTimer -Client 'MMG - Data' -Project 'Reporting'
+Start-PstTimer -Client 'Globex' -Project 'Reporting'
 # Work... Press key when done
 
 # End of day: View your summary
 Get-PstDaySummary
 ```
 
-## Example 7: Manual Configuration Edit
+## Example 7: Opening Configuration and Time Files
 
 ```powershell
-# Open the config file in notepad
-notepad "$env:LocalAppData\PstTimeTracker\config.json"
+# Open the config file in VS Code (default)
+Open-PstConfig
 
-# Or open in VS Code
-code "$env:LocalAppData\PstTimeTracker\config.json"
+# Open it in Notepad instead
+Open-PstConfig -Editor Notepad
 
-# The config file is user-specific and fully customizable
-# You can edit it directly or use the PowerShell functions
+# Open today's time tracking file
+Open-PstDay
+
+# Open a specific date's file
+Open-PstDay -Date '2026-04-01'
+
+# Open in Notepad
+Open-PstDay -Date '2026-04-01' -Editor Notepad
 ```
 
 ## Example 8: Managing Configuration via Functions
@@ -142,6 +151,6 @@ Update-PstClient -Name 'ClientA' -NewName 'Acme Corporation'
 
 3. **View History**: Check previous days with `Get-PstDaySummary -Date '2026-04-01'`
 
-4. **Backup**: Your configuration and time data are automatically backed up in `$env:LocalAppData\PstTimeTracker\`
+4. **Edit Files Directly**: Use `Open-PstConfig` or `Open-PstDay` to open JSON files in your editor
 
 5. **Validation**: All time tracking functions validate that clients and projects exist in your configuration

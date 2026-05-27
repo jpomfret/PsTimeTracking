@@ -45,11 +45,11 @@ function Get-PstConfig {
                     Projects = @('Website Redesign', 'Database Migration')
                 }
                 [PSCustomObject]@{
-                    Name = 'MMG - Data'
+                    Name = 'Globex'
                     Projects = @('Data Analysis', 'ETL Pipeline', 'Reporting')
                 }
                 [PSCustomObject]@{
-                    Name = 'MMG - DevOps'
+                    Name = 'Initech'
                     Projects = @('CI/CD Setup', 'Infrastructure', 'Monitoring')
                 }
             )

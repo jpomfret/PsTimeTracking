@@ -49,5 +49,16 @@ Describe "Backup-PstDay Unit Tests" -Tag 'UnitTests' {
             Backup-PstDay -TodaysWork $script:testWork
             Should -Invoke 'Get-ChildItem' -ModuleName 'PsTimeTracking' -Exactly 1
         }
+
+        It 'Should only prune todayswork-*.json files, not config.json' {
+            $script:capturedFilter = $null
+            Mock -CommandName 'Get-ChildItem' -ModuleName 'PsTimeTracking' -MockWith {
+                param($Path, $Filter)
+                $script:capturedFilter = $Filter
+                @()
+            }
+            Backup-PstDay -TodaysWork $script:testWork
+            $script:capturedFilter | Should -Be 'todayswork-*.json'
+        }
     }
 }
