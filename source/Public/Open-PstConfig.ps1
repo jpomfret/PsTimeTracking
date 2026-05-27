@@ -42,7 +42,7 @@ function Open-PstConfig {
     }
 
     switch ($Editor) {
-        'VSCode'  { code $configFile }
-        'Notepad' { notepad $configFile }
+        'VSCode'  { Start-Process -FilePath 'code' -ArgumentList $configFile }
+        'Notepad' { Start-Process -FilePath 'notepad' -ArgumentList $configFile }
     }
 }

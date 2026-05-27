@@ -13,9 +13,9 @@ Describe "Open-PstConfig Unit Tests" -Tag 'UnitTests' {
 
         It 'Should use VSCode by default when no editor is specified' {
             Mock -CommandName 'Test-Path' -ModuleName 'PsTimeTracking' -MockWith { $true }
-            Mock -CommandName 'code' -ModuleName 'PsTimeTracking' -MockWith {}
+            Mock -CommandName 'Start-Process' -ModuleName 'PsTimeTracking' -MockWith {}
             Open-PstConfig
-            Should -Invoke 'code' -ModuleName 'PsTimeTracking' -Exactly 1
+            Should -Invoke 'Start-Process' -ModuleName 'PsTimeTracking' -Exactly 1 -ParameterFilter { $FilePath -eq 'code' }
         }
 
         It 'Should only accept VSCode or Notepad as valid editor values' {
@@ -37,17 +37,16 @@ Describe "Open-PstConfig Unit Tests" -Tag 'UnitTests' {
         }
 
         It 'Should return early without opening an editor when config file does not exist' {
-            Mock -CommandName 'code' -ModuleName 'PsTimeTracking' -MockWith {}
+            Mock -CommandName 'Start-Process' -ModuleName 'PsTimeTracking' -MockWith {}
             Open-PstConfig -WarningAction SilentlyContinue
-            Should -Invoke 'code' -ModuleName 'PsTimeTracking' -Exactly 0
+            Should -Invoke 'Start-Process' -ModuleName 'PsTimeTracking' -Exactly 0
         }
     }
 
     Context "Functionality - config file exists" {
         BeforeEach {
             Mock -CommandName 'Test-Path' -ModuleName 'PsTimeTracking' -MockWith { $true }
-            Mock -CommandName 'code' -ModuleName 'PsTimeTracking' -MockWith {}
-            Mock -CommandName 'notepad' -ModuleName 'PsTimeTracking' -MockWith {}
+            Mock -CommandName 'Start-Process' -ModuleName 'PsTimeTracking' -MockWith {}
         }
 
         It 'Should not throw when opening with VSCode' {

@@ -53,7 +53,7 @@ function Open-PstDay {
     }
 
     switch ($Editor) {
-        'VSCode'  { code $fileName }
-        'Notepad' { notepad $fileName }
+        'VSCode'  { Start-Process -FilePath 'code' -ArgumentList $fileName }
+        'Notepad' { Start-Process -FilePath 'notepad' -ArgumentList $fileName }
     }
 }

@@ -13,9 +13,9 @@ Describe "Open-PstDay Unit Tests" -Tag 'UnitTests' {
 
         It 'Should use VSCode by default when no editor is specified' {
             Mock -CommandName 'Test-Path' -ModuleName 'PsTimeTracking' -MockWith { $true }
-            Mock -CommandName 'code' -ModuleName 'PsTimeTracking' -MockWith {}
+            Mock -CommandName 'Start-Process' -ModuleName 'PsTimeTracking' -MockWith {}
             Open-PstDay
-            Should -Invoke 'code' -ModuleName 'PsTimeTracking' -Exactly 1
+            Should -Invoke 'Start-Process' -ModuleName 'PsTimeTracking' -Exactly 1 -ParameterFilter { $FilePath -eq 'code' }
         }
 
         It 'Should have an optional Date parameter' {
@@ -41,17 +41,16 @@ Describe "Open-PstDay Unit Tests" -Tag 'UnitTests' {
         }
 
         It 'Should return early without opening an editor when file does not exist' {
-            Mock -CommandName 'code' -ModuleName 'PsTimeTracking' -MockWith {}
+            Mock -CommandName 'Start-Process' -ModuleName 'PsTimeTracking' -MockWith {}
             Open-PstDay -Date '2025-01-01' -WarningAction SilentlyContinue
-            Should -Invoke 'code' -ModuleName 'PsTimeTracking' -Exactly 0
+            Should -Invoke 'Start-Process' -ModuleName 'PsTimeTracking' -Exactly 0
         }
     }
 
     Context "Functionality - file exists" {
         BeforeEach {
             Mock -CommandName 'Test-Path' -ModuleName 'PsTimeTracking' -MockWith { $true }
-            Mock -CommandName 'code' -ModuleName 'PsTimeTracking' -MockWith {}
-            Mock -CommandName 'notepad' -ModuleName 'PsTimeTracking' -MockWith {}
+            Mock -CommandName 'Start-Process' -ModuleName 'PsTimeTracking' -MockWith {}
         }
 
         It 'Should not throw when opening a specific date with VSCode' {
