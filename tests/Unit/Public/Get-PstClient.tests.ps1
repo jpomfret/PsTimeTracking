@@ -1,14 +1,15 @@
 
 Describe "Get-PstClient Unit Tests" -Tag 'UnitTests' {
     BeforeAll {
-        # Ensure we have a clean config for testing
-        if ($IsWindows -or $PSVersionTable.PSVersion.Major -le 5) {
-            $configFile = Join-Path $env:LOCALAPPDATA 'PstTimeTracker\config.json'
-        } else {
-            $configFile = Join-Path $HOME '.local/share/PstTimeTracker/config.json'
-        }
-        if (Test-Path $configFile) {
-            Remove-Item $configFile -Force
+        # Mock the config within the module scope so tests never touch the real
+        # config.json in the user's appdata folder.
+        Mock -CommandName 'Get-PstConfig' -ModuleName 'PsTimeTracking' -MockWith {
+            [PSCustomObject]@{
+                Clients = @(
+                    [PSCustomObject]@{ Name = 'ClientA'; Projects = @('Project Alpha', 'Project Beta') }
+                    [PSCustomObject]@{ Name = 'ClientB'; Projects = @('Website Redesign') }
+                )
+            }
         }
     }
 

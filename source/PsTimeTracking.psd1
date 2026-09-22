@@ -39,6 +39,7 @@ FunctionsToExport = @(
     'Get-PstClient'
     'Get-PstDaySummary'
     'Get-PstProject'
+    'Get-PstWeekSummary'
     'Move-PstTime'
     'Open-PstConfig'
     'Open-PstDay'

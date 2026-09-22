@@ -60,6 +60,7 @@ SEE ALSO
   - Get-PstClient
   - Start-PstTimer
   - Get-PstDaySummary
+  - Get-PstWeekSummary
   - Open-PstConfig
 
 KEYWORDS
