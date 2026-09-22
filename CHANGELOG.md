@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Get-PstWeekSummary function showing the week's hours as a table (clients down the left, days Monday to Sunday across the top, with per-day and per-client totals); `-Detailed` breaks each client down by project
 - Behavior tests for all public functions (121 total)
 - Open-PstConfig and Open-PstDay functions to open JSON files in an editor
 - Move-PstTime function to move time between client/project buckets
